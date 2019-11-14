@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DB_AddressModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Anschrift">
+          <Key>
+            <PropertyRef Name="AnschriftID" />
+          </Key>
+          <Property Name="AnschriftID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StraßeName" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="WohnungNummer" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="PLZ" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="StadtId" Type="int" />
+          <Property Name="LandId" Type="int" Nullable="false" />
+          <Property Name="HashValue" Type="binary" MaxLength="16" />
+          <Property Name="HashCode" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryCode" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Stadt">
+          <Key>
+            <PropertyRef Name="StadtID" />
+          </Key>
+          <Property Name="StadtID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StadtCode" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="StadtName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="LandCode" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Anschrift_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryID" />
+            </Principal>
+            <Dependent Role="Anschrift">
+              <PropertyRef Name="LandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Anschrift_Stadt">
+          <End Role="Stadt" Type="Self.Stadt" Multiplicity="0..1" />
+          <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stadt">
+              <PropertyRef Name="StadtID" />
+            </Principal>
+            <Dependent Role="Anschrift">
+              <PropertyRef Name="StadtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DB_AddressModel1StoreContainer">
+          <EntitySet Name="Anschrift" EntityType="Self.Anschrift" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stadt" EntityType="Self.Stadt" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Anschrift_Country" Association="Self.FK_Anschrift_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Anschrift" EntitySet="Anschrift" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Anschrift_Stadt" Association="Self.FK_Anschrift_Stadt">
+            <End Role="Stadt" EntitySet="Stadt" />
+            <End Role="Anschrift" EntitySet="Anschrift" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_AddressModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Anschrift">
+          <Key>
+            <PropertyRef Name="AnschriftID" />
+          </Key>
+          <Property Name="AnschriftID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StraßeName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="WohnungNummer" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PLZ" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StadtId" Type="Int32" />
+          <Property Name="LandId" Type="Int32" Nullable="false" />
+          <Property Name="HashValue" Type="Binary" MaxLength="16" FixedLength="true" />
+          <Property Name="HashCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Country" Relationship="Self.FK_Anschrift_Country" FromRole="Anschrift" ToRole="Country" />
+          <NavigationProperty Name="Stadt" Relationship="Self.FK_Anschrift_Stadt" FromRole="Anschrift" ToRole="Stadt" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CountryName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Anschrifts" Relationship="Self.FK_Anschrift_Country" FromRole="Country" ToRole="Anschrift" />
+        </EntityType>
+        <EntityType Name="Stadt">
+          <Key>
+            <PropertyRef Name="StadtID" />
+          </Key>
+          <Property Name="StadtID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StadtCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StadtName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LandCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Anschrifts" Relationship="Self.FK_Anschrift_Stadt" FromRole="Stadt" ToRole="Anschrift" />
+        </EntityType>
+        <Association Name="FK_Anschrift_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="1" />
+          <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="CountryID" />
+            </Principal>
+            <Dependent Role="Anschrift">
+              <PropertyRef Name="LandId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Anschrift_Stadt">
+          <End Role="Stadt" Type="Self.Stadt" Multiplicity="0..1" />
+          <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stadt">
+              <PropertyRef Name="StadtID" />
+            </Principal>
+            <Dependent Role="Anschrift">
+              <PropertyRef Name="StadtId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DB_AddressEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Anschrifts" EntityType="Self.Anschrift" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Stadts" EntityType="Self.Stadt" />
+          <AssociationSet Name="FK_Anschrift_Country" Association="Self.FK_Anschrift_Country">
+            <End Role="Country" EntitySet="Countries" />
+            <End Role="Anschrift" EntitySet="Anschrifts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Anschrift_Stadt" Association="Self.FK_Anschrift_Stadt">
+            <End Role="Stadt" EntitySet="Stadts" />
+            <End Role="Anschrift" EntitySet="Anschrifts" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_AddressModel1StoreContainer" CdmEntityContainer="DB_AddressEntities">
+          <EntitySetMapping Name="Anschrifts">
+            <EntityTypeMapping TypeName="DB_AddressModel1.Anschrift">
+              <MappingFragment StoreEntitySet="Anschrift">
+                <ScalarProperty Name="AnschriftID" ColumnName="AnschriftID" />
+                <ScalarProperty Name="StraßeName" ColumnName="StraßeName" />
+                <ScalarProperty Name="WohnungNummer" ColumnName="WohnungNummer" />
+                <ScalarProperty Name="PLZ" ColumnName="PLZ" />
+                <ScalarProperty Name="StadtId" ColumnName="StadtId" />
+                <ScalarProperty Name="LandId" ColumnName="LandId" />
+                <ScalarProperty Name="HashValue" ColumnName="HashValue" />
+                <ScalarProperty Name="HashCode" ColumnName="HashCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="DB_AddressModel1.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stadts">
+            <EntityTypeMapping TypeName="DB_AddressModel1.Stadt">
+              <MappingFragment StoreEntitySet="Stadt">
+                <ScalarProperty Name="StadtID" ColumnName="StadtID" />
+                <ScalarProperty Name="StadtCode" ColumnName="StadtCode" />
+                <ScalarProperty Name="StadtName" ColumnName="StadtName" />
+                <ScalarProperty Name="LandCode" ColumnName="LandCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
