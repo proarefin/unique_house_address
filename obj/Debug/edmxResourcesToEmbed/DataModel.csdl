@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_AddressModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Anschrift">
+    <Key>
+      <PropertyRef Name="AnschriftID" />
+    </Key>
+    <Property Name="AnschriftID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StraßeName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="WohnungNummer" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PLZ" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="StadtId" Type="Int32" />
+    <Property Name="LandId" Type="Int32" Nullable="false" />
+    <Property Name="HashValue" Type="Binary" MaxLength="16" FixedLength="true" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_Anschrift_Country" FromRole="Anschrift" ToRole="Country" />
+    <NavigationProperty Name="Stadt" Relationship="Self.FK_Anschrift_Stadt" FromRole="Anschrift" ToRole="Stadt" />
+    <Property Name="HashCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="CountryID" />
+    </Key>
+    <Property Name="CountryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CountryCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CountryName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Anschrifts" Relationship="Self.FK_Anschrift_Country" FromRole="Country" ToRole="Anschrift" />
+  </EntityType>
+  <EntityType Name="Stadt">
+    <Key>
+      <PropertyRef Name="StadtID" />
+    </Key>
+    <Property Name="StadtID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StadtCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="StadtName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LandCode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Anschrifts" Relationship="Self.FK_Anschrift_Stadt" FromRole="Stadt" ToRole="Anschrift" />
+  </EntityType>
+  <Association Name="FK_Anschrift_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="CountryID" />
+      </Principal>
+      <Dependent Role="Anschrift">
+        <PropertyRef Name="LandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Anschrift_Stadt">
+    <End Role="Stadt" Type="Self.Stadt" Multiplicity="0..1" />
+    <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stadt">
+        <PropertyRef Name="StadtID" />
+      </Principal>
+      <Dependent Role="Anschrift">
+        <PropertyRef Name="StadtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AddressEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Anschrifts" EntityType="Self.Anschrift" />
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Stadts" EntityType="Self.Stadt" />
+    <AssociationSet Name="FK_Anschrift_Country" Association="Self.FK_Anschrift_Country">
+      <End Role="Country" EntitySet="Countries" />
+      <End Role="Anschrift" EntitySet="Anschrifts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Anschrift_Stadt" Association="Self.FK_Anschrift_Stadt">
+      <End Role="Stadt" EntitySet="Stadts" />
+      <End Role="Anschrift" EntitySet="Anschrifts" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

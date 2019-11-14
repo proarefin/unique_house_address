@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_AddressModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Anschrift">
+    <Key>
+      <PropertyRef Name="AnschriftID" />
+    </Key>
+    <Property Name="AnschriftID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StraßeName" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="WohnungNummer" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="PLZ" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="StadtId" Type="int" />
+    <Property Name="LandId" Type="int" Nullable="false" />
+    <Property Name="HashValue" Type="binary" MaxLength="16" />
+    <Property Name="HashCode" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="CountryID" />
+    </Key>
+    <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CountryCode" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="CountryName" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Stadt">
+    <Key>
+      <PropertyRef Name="StadtID" />
+    </Key>
+    <Property Name="StadtID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StadtCode" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="StadtName" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="LandCode" Type="varchar" MaxLength="5" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Anschrift_Country">
+    <End Role="Country" Type="Self.Country" Multiplicity="1" />
+    <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Country">
+        <PropertyRef Name="CountryID" />
+      </Principal>
+      <Dependent Role="Anschrift">
+        <PropertyRef Name="LandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Anschrift_Stadt">
+    <End Role="Stadt" Type="Self.Stadt" Multiplicity="0..1" />
+    <End Role="Anschrift" Type="Self.Anschrift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stadt">
+        <PropertyRef Name="StadtID" />
+      </Principal>
+      <Dependent Role="Anschrift">
+        <PropertyRef Name="StadtId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DB_AddressModelStoreContainer">
+    <EntitySet Name="Anschrift" EntityType="Self.Anschrift" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Stadt" EntityType="Self.Stadt" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Anschrift_Country" Association="Self.FK_Anschrift_Country">
+      <End Role="Country" EntitySet="Country" />
+      <End Role="Anschrift" EntitySet="Anschrift" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Anschrift_Stadt" Association="Self.FK_Anschrift_Stadt">
+      <End Role="Stadt" EntitySet="Stadt" />
+      <End Role="Anschrift" EntitySet="Anschrift" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
