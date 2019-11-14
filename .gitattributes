@@ -1,1 +1,3 @@
-.rb linguist-language=C#
+*.rb linguist-language=C#
+
+*.glyphs linguist-language=OpenStep-Property-List
